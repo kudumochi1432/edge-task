@@ -4,13 +4,30 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Edge Task Overlay — Responsive</title>
+
+  <!-- PWA / iOS (optional, keep if you already added in GitHub) -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <style>
     :root{
-      --bg:#0b1020; --card:#0f1724; --accent:#7dd3fc; --muted:#9aa4b2;
-      --title-size:22px; --item-title-size:18px; --item-sub-size:14px; --meta-size:14px;
+      --bg:#0b1020;
+      --card:#0f1724;
+      --accent:#7dd3fc;
+      --muted:#9aa4b2;
+
+      --title-size:22px;
+      --item-title-size:18px;
+      --item-sub-size:14px;
+      --meta-size:14px;
+
       --radius:12px;
       --pad:12px;
       --gap:10px;
+
       --run-bg: rgba(125, 211, 252, 0.14);
       --run-border: rgba(125, 211, 252, 0.45);
       --sel-border: rgba(255,255,255,0.18);
@@ -23,7 +40,7 @@
       padding:var(--pad);
       box-sizing:border-box;
       backdrop-filter:blur(6px);
-      background:linear-gradient(180deg, rgba(11,16,32,0.85), rgba(15,23,36,0.8));
+      background:linear-gradient(180deg, rgba(11,16,32,0.86), rgba(15,23,36,0.82));
       color:#e6eef8;
       border-radius:var(--radius);
       border:1px solid rgba(255,255,255,0.06);
@@ -93,7 +110,7 @@
     button{
       background:transparent;
       border:1px solid rgba(255,255,255,0.12);
-      padding:9px 10px;
+      padding:10px 12px;
       border-radius:10px;
       color:inherit;
       cursor:pointer;
@@ -122,7 +139,7 @@
     .time-input{
       background:transparent;
       border:1px dashed rgba(255,255,255,0.10);
-      padding:10px 12px;
+      padding:12px 12px;
       border-radius:10px;
       color:#d7e2ee;
       font-size:var(--meta-size);
@@ -132,11 +149,19 @@
     }
     .time-input::placeholder{color:rgba(154,164,178,0.85)}
 
+    /* Bigger hit area for the slider on mobile */
     .settings{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--muted);flex-wrap:wrap}
-    .settings input[type="range"]{width:min(220px, 60vw)}
+    .settings input[type="range"]{width:min(260px, 70vw); height:28px;}
+    input[type="range"]::-webkit-slider-thumb{width:26px;height:26px;border-radius:999px;}
+    input[type="range"]::-moz-range-thumb{width:26px;height:26px;border-radius:999px;border:none;}
+
     .toggle{display:inline-flex;align-items:center;gap:6px;user-select:none}
     .toggle input{transform:translateY(1px)}
-    select{background:rgba(255,255,255,0.03);color:#e6eef8;border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:8px 10px;font-size:12px}
+
+    select{background:rgba(255,255,255,0.03);color:#e6eef8;border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:9px 10px;font-size:12px}
+
+    .chipbar{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:10px 12px;border-radius:999px;font-size:13px}
 
     footer{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
     .export{font-size:12px;color:var(--muted)}
@@ -156,17 +181,28 @@
       min-height:0;
       display:flex;
       flex-direction:column;
-      justify-content:space-between;
-      gap:14px;
+      gap:12px;
       padding:16px;
       border-radius:var(--radius);
       border:1px solid rgba(255,255,255,0.08);
       background:linear-gradient(180deg, rgba(125,211,252,0.10), rgba(255,255,255,0.03));
       overflow:hidden;
     }
+
+    .focusTop{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
     .focusTitle{font-size:calc(var(--title-size) + 8px);font-weight:1000;line-height:1.08;word-break:break-word;overflow-wrap:anywhere}
-    .focusNote{font-size:14px;color:#d7e2ee;opacity:0.95;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;flex:1;overflow:auto;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:10px;background:rgba(0,0,0,0.12)}
+    .focusNote{font-size:15px;color:#d7e2ee;opacity:0.95;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;flex:1;overflow:auto;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:10px;background:rgba(0,0,0,0.12)}
     .focusMeta{font-size:12px;color:var(--muted)}
+
+    .focusActions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start}
+
+    /* Landscape: "文字だけで集中" がしやすい */
+    @media (orientation: landscape) and (max-height: 430px){
+      .focusCard{padding:14px}
+      .focusTitle{font-size:calc(var(--title-size) + 12px)}
+      .focusNote{display:none}
+      .focusActions button{font-size:14px;padding:10px 14px}
+    }
 
     dialog{border:none;border-radius:14px;padding:0;max-width:min(860px, 96vw);width:min(860px, 96vw);}
     dialog::backdrop{background:rgba(0,0,0,0.55)}
@@ -176,6 +212,11 @@
     .modal textarea{width:100%;min-height:240px;resize:vertical;background:rgba(255,255,255,0.03);color:#e6eef8;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px;font-size:13px;line-height:1.4}
     .modal .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
+    .settingsGrid{display:grid;grid-template-columns:1fr;gap:10px}
+    .settingsRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .settingsRow input[type="text"]{background:rgba(255,255,255,0.03);color:#e6eef8;border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:10px 12px;min-width:160px}
+    .settingsRow input[type="color"]{width:44px;height:38px;border:none;background:transparent;padding:0}
+
     @media (max-width:360px){
       header h1{font-size:15px}
       .time-input{flex:1 1 100%; min-width:0}
@@ -184,18 +225,15 @@
       .focusTitle{font-size:calc(var(--title-size) + 4px)}
     }
   </style>
-  <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0b1020">
-
-<link rel="apple-touch-icon" href="./apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
   <div class="overlay" id="app">
     <header>
       <h1>タスクボード</h1>
-      <div class="clock" id="clock">--:--</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="clock" id="clock">--:--</div>
+        <button id="openSettings" title="設定" aria-label="設定">⚙︎</button>
+      </div>
     </header>
 
     <section class="now" id="nowBar">
@@ -206,7 +244,6 @@
       <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
         <button id="toggleFocus" class="primary" title="開始中タスクだけ表示">集中</button>
         <button id="openSummary">サマリー</button>
-        <button id="exportBtn">CSV</button>
       </div>
     </section>
 
@@ -237,6 +274,14 @@
         </div>
       </div>
 
+      <!-- Quick insert buttons for memo (楽に打つ用) -->
+      <div class="chipbar">
+        <button class="chip" id="chipStart" title="開始時刻を 'HH:MM-' 形式で追記">開始</button>
+        <button class="chip" id="chipEnd" title="終了時刻を追記">終了</button>
+        <button class="chip" id="chipSlash" title="区切り ' / ' を追加">/</button>
+        <button class="chip" id="chipNext" title="次やることのテンプレ">次：</button>
+      </div>
+
       <div class="settings">
         <label>追加順</label>
         <select id="orderSelect" title="新しいタスクの位置">
@@ -245,7 +290,7 @@
         </select>
 
         <label>文字サイズ</label>
-        <input id="fontRange" type="range" min="14" max="46" step="1" />
+        <input id="fontRange" type="range" min="14" max="64" step="1" />
         <div id="fontValue" style="min-width:44px;text-align:right"></div>
 
         <span class="muted">（n:追加 / c:開始停止 / d:Done / f:集中 / Esc:戻る）</span>
@@ -262,16 +307,16 @@
     <!-- Focus screen -->
     <section class="focusScreen" id="focusScreen">
       <div class="focusCard">
-        <div>
+        <div class="focusTop">
           <div class="focusMeta" id="focusMeta">集中モード</div>
           <div class="focusTitle" id="focusTitle">（開始中タスクなし）</div>
+          <div class="focusActions">
+            <button id="focusAppendNow">＋いま</button>
+            <button id="focusStop" class="primary">停止</button>
+            <button id="focusBack" class="primary">戻る</button>
+          </div>
         </div>
         <div class="focusNote" id="focusNote">開始中タスクがないときは、通常表示に戻って開始してください。</div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
-          <button id="focusAppendNow">＋いま</button>
-          <button id="focusStop" class="primary">停止</button>
-          <button id="focusBack" class="primary">戻る</button>
-        </div>
       </div>
     </section>
   </div>
@@ -295,6 +340,29 @@
     </div>
   </dialog>
 
+  <dialog id="settingsDialog">
+    <div class="modal">
+      <header>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+          <div style="font-weight:900;">設定</div>
+          <button id="closeSettings">閉じる</button>
+        </div>
+      </header>
+      <div class="body">
+        <div class="settingsGrid">
+          <div class="muted">色（差し色）</div>
+          <div class="settingsRow">
+            <input id="accentPicker" type="color" />
+            <input id="accentHex" type="text" placeholder="#7dd3fc" />
+            <button id="applyAccent" class="primary">適用</button>
+            <button id="resetAccent">リセット</button>
+          </div>
+          <div class="muted">ヒント：#RRGGBB で好きな色にできます（例 #7dd3fc）。</div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     const $ = id => document.getElementById(id);
 
@@ -308,6 +376,52 @@
     function nowHM(){ const d = new Date(); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }
     function localYMD(d){ const y=d.getFullYear(); const m=pad2(d.getMonth()+1); const day=pad2(d.getDate()); return `${y}-${m}-${day}`; }
     function isToday(ts){ return localYMD(new Date(ts)) === localYMD(new Date()); }
+
+    // --- Theme (accent) ---
+    const DEFAULT_ACCENT = '#7dd3fc';
+    function normalizeHex(s){
+      if(!s) return null;
+      s = String(s).trim();
+      if(!s.startsWith('#')) s = '#' + s;
+      if(/^#[0-9a-fA-F]{6}$/.test(s)) return s.toLowerCase();
+      return null;
+    }
+    function applyAccent(hex){
+      document.documentElement.style.setProperty('--accent', hex);
+      // keep derived borders in sync
+      document.documentElement.style.setProperty('--run-bg', 'rgba(125, 211, 252, 0.14)');
+      localStorage.setItem('edge_accent', hex);
+    }
+    const savedAccent = normalizeHex(localStorage.getItem('edge_accent')) || DEFAULT_ACCENT;
+    applyAccent(savedAccent);
+
+    // Settings dialog
+    const settingsDialog = $('settingsDialog');
+    $('openSettings').onclick = ()=>{
+      const cur = normalizeHex(localStorage.getItem('edge_accent')) || DEFAULT_ACCENT;
+      $('accentPicker').value = cur;
+      $('accentHex').value = cur;
+      settingsDialog.showModal();
+    };
+    $('closeSettings').onclick = ()=> settingsDialog.close();
+
+    $('applyAccent').onclick = ()=>{
+      const hex = normalizeHex($('accentHex').value) || normalizeHex($('accentPicker').value);
+      if(!hex) return alert('カラーコードは #RRGGBB の形式で入力してください（例: #7dd3fc）');
+      $('accentHex').value = hex;
+      $('accentPicker').value = hex;
+      applyAccent(hex);
+      render();
+    };
+
+    $('accentPicker').addEventListener('input', ()=>{ $('accentHex').value = $('accentPicker').value; });
+    $('resetAccent').onclick = ()=>{
+      localStorage.removeItem('edge_accent');
+      $('accentPicker').value = DEFAULT_ACCENT;
+      $('accentHex').value = DEFAULT_ACCENT;
+      applyAccent(DEFAULT_ACCENT);
+      render();
+    };
 
     // --- Settings: font size ---
     const defaultFont = parseInt(localStorage.getItem('edge_font') || '22', 10);
@@ -329,7 +443,7 @@
     function evaluateAutoCompact(){
       const w = app.clientWidth;
       const h = app.clientHeight;
-      const shouldCompact = (w <= 360) || (h <= 620);
+      const shouldCompact = (w <= 380) || (h <= 620);
       app.classList.toggle('compact', shouldCompact);
     }
     if('ResizeObserver' in window){
@@ -404,7 +518,7 @@
     function deleteTask(taskId){
       const t = tasks.find(x=>x.id===taskId);
       if(!t) return;
-      const ok = confirm('このタスクを削除しますか？\n\n' + t.title);
+      const ok = confirm('このタスクを削除しますか？\\n\\n' + t.title);
       if(!ok) return;
       if(t.running){
         const last = t.logs[t.logs.length-1];
@@ -420,7 +534,6 @@
       if(todayOnly.checked) arr = arr.filter(t=>isToday(t.created));
       if(hideDone.checked) arr = arr.filter(t=>!t.done);
 
-      // order: sort by created
       const dir = (orderSelect.value === 'top') ? -1 : 1; // top = newest first
       arr.sort((a,b)=> (a.created - b.created) * dir);
       return arr;
@@ -486,7 +599,7 @@
       if(r){
         focusMeta.textContent = '集中モード（開始中タスクのみ表示）';
         focusTitle.textContent = r.title;
-        focusNote.textContent = r.note ? r.note : 'メモなし（通常表示に戻ってメモ追加できます）';
+        focusNote.textContent = r.note ? r.note : 'メモなし（下の「＋いま」「開始/終了」「/」「次：」で追記できます）';
         focusStop.disabled = false;
         focusAppendNow.disabled = false;
       } else {
@@ -570,18 +683,43 @@
       const title = quickAdd.value.trim();
       if(!title) return;
       const t = { id:'id'+Date.now(), title, note:'', done:false, created:Date.now(), running:false, logs:[] };
-      tasks.push(t); // keep insertion order stable; rendering decides where new appears
+      tasks.push(t);
       quickAdd.value='';
       setSelected(t.id);
     };
 
-    // --- Memo ---
+    // --- Memo helpers ---
+    function appendTextToNote(txt){
+      const cur = timeNote.value || '';
+      timeNote.value = cur ? (cur + txt) : txt;
+    }
+
     function appendNowToNote(){
       const stamp = nowHM();
       const cur = timeNote.value || '';
       const next = cur ? (cur.trim().endsWith('-') || cur.trim().endsWith('–') ? `${cur}${stamp}` : `${cur} ${stamp}`) : stamp;
       timeNote.value = next;
     }
+
+    function appendStart(){
+      const stamp = nowHM();
+      const cur = timeNote.value || '';
+      // If empty or ends with separator, add "HH:MM-". Otherwise add " HH:MM-".
+      const prefix = cur && !cur.endsWith(' ') ? ' ' : '';
+      timeNote.value = cur ? (cur + prefix + stamp + '-') : (stamp + '-');
+    }
+
+    function appendEnd(){
+      const stamp = nowHM();
+      const cur = timeNote.value || '';
+      const prefix = cur && !cur.endsWith(' ') ? ' ' : '';
+      timeNote.value = cur ? (cur + prefix + stamp) : stamp;
+    }
+
+    $('chipStart').onclick = ()=> appendStart();
+    $('chipEnd').onclick = ()=> appendEnd();
+    $('chipSlash').onclick = ()=> appendTextToNote(' / ');
+    $('chipNext').onclick = ()=> appendTextToNote(' 次: ');
 
     appendNowBtn.onclick = ()=> appendNowToNote();
 
@@ -615,24 +753,7 @@
       updateFocusScreen();
     };
 
-    // --- Export / Clear ---
-    $('exportBtn').onclick = ()=>{
-      const rows = [['title','note','done','created','running','logs_start','logs_end']];
-      tasks.forEach(t=>{
-        const starts = t.logs.map(l=>l.start? new Date(l.start).toLocaleString():'').join('|');
-        const ends = t.logs.map(l=>l.end? new Date(l.end).toLocaleString():'').join('|');
-        rows.push([t.title, t.note||'', t.done?1:0, new Date(t.created).toLocaleString(), t.running?1:0, starts, ends]);
-      });
-      const csv = rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-      const blob = new Blob([csv], {type:'text/csv'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href=url;
-      a.download='edge_tasks_'+(new Date().toISOString().slice(0,10))+'.csv';
-      a.click();
-      URL.revokeObjectURL(url);
-    };
-
+    // --- Clear ---
     $('clearBtn').onclick = ()=>{
       if(confirm('全てのタスクを削除しますか？')){
         tasks=[];
@@ -679,7 +800,7 @@
 
       lines.push('■ メモ');
       lines.push('・');
-      return lines.join('\n');
+      return lines.join('\\n');
     }
 
     $('openSummary').onclick = ()=>{
@@ -730,6 +851,7 @@
       }
       if(e.key==='Escape'){
         if(dialog.open) dialog.close();
+        if(settingsDialog.open) settingsDialog.close();
         if(app.classList.contains('focus')) setFocus(false);
       }
     });
