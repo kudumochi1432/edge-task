@@ -503,11 +503,12 @@
     function getRunningTask(){ return tasks.find(t=>t.running); }
 
     function setSelected(taskId){
-      selectedId = taskId;
-      const t = tasks.find(x=>x.id===selectedId);
-      timeNote.value = t ? (t.note || '') : '';
-      save();
-    }
+  selectedId = taskId;
+  const t = tasks.find(x=>x.id===selectedId);
+  timeNote.value = t ? (t.note || '') : '';
+  localStorage.setItem('edge_selected', selectedId || '');
+  render();
+}
 
     function deleteTask(taskId){
       const t = tasks.find(x=>x.id===taskId);
