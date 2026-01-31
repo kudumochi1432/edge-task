@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Edge Task Overlay — Responsive</title>
 
-  <!-- PWA / iOS (optional, keep if you already added in GitHub) -->
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#0b1020">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
@@ -49,7 +48,6 @@
       overflow:hidden;
     }
 
-    /* Mild compact spacing (auto when embed is small) */
     .overlay.compact{ --pad:10px; --gap:8px; --radius:10px; }
 
     header{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -149,24 +147,16 @@
     }
     .time-input::placeholder{color:rgba(154,164,178,0.85)}
 
-    /* Bigger hit area for the slider on mobile */
     .settings{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--muted);flex-wrap:wrap}
     .settings input[type="range"]{width:min(260px, 70vw); height:28px;}
     input[type="range"]::-webkit-slider-thumb{width:26px;height:26px;border-radius:999px;}
     input[type="range"]::-moz-range-thumb{width:26px;height:26px;border-radius:999px;border:none;}
-
-    .toggle{display:inline-flex;align-items:center;gap:6px;user-select:none}
-    .toggle input{transform:translateY(1px)}
-
     select{background:rgba(255,255,255,0.03);color:#e6eef8;border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:9px 10px;font-size:12px}
-
-    .chipbar{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{padding:10px 12px;border-radius:999px;font-size:13px}
 
     footer{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
     .export{font-size:12px;color:var(--muted)}
 
-    /* Focus mode: show only the running task (or selected) */
+    /* Focus mode */
     .overlay.focus header,
     .overlay.focus .listWrap,
     .overlay.focus .bottom,
@@ -188,15 +178,12 @@
       background:linear-gradient(180deg, rgba(125,211,252,0.10), rgba(255,255,255,0.03));
       overflow:hidden;
     }
-
     .focusTop{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
     .focusTitle{font-size:calc(var(--title-size) + 8px);font-weight:1000;line-height:1.08;word-break:break-word;overflow-wrap:anywhere}
+    .focusActions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start}
     .focusNote{font-size:15px;color:#d7e2ee;opacity:0.95;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;flex:1;overflow:auto;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:10px;background:rgba(0,0,0,0.12)}
     .focusMeta{font-size:12px;color:var(--muted)}
 
-    .focusActions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start}
-
-    /* Landscape: "文字だけで集中" がしやすい */
     @media (orientation: landscape) and (max-height: 430px){
       .focusCard{padding:14px}
       .focusTitle{font-size:calc(var(--title-size) + 12px)}
@@ -211,11 +198,6 @@
     .modal .body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
     .modal textarea{width:100%;min-height:240px;resize:vertical;background:rgba(255,255,255,0.03);color:#e6eef8;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px;font-size:13px;line-height:1.4}
     .modal .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-
-    .settingsGrid{display:grid;grid-template-columns:1fr;gap:10px}
-    .settingsRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .settingsRow input[type="text"]{background:rgba(255,255,255,0.03);color:#e6eef8;border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:10px 12px;min-width:160px}
-    .settingsRow input[type="color"]{width:44px;height:38px;border:none;background:transparent;padding:0}
 
     @media (max-width:360px){
       header h1{font-size:15px}
@@ -232,7 +214,6 @@
       <h1>タスクボード</h1>
       <div style="display:flex;align-items:center;gap:10px;">
         <div class="clock" id="clock">--:--</div>
-        <button id="openSettings" title="設定" aria-label="設定">⚙︎</button>
       </div>
     </header>
 
@@ -275,7 +256,6 @@
         </div>
       </div>
 
-
       <div class="settings">
         <label>追加順</label>
         <select id="orderSelect" title="新しいタスクの位置">
@@ -298,7 +278,6 @@
       </div>
     </footer>
 
-    <!-- Focus screen -->
     <section class="focusScreen" id="focusScreen">
       <div class="focusCard">
         <div class="focusTop">
@@ -334,90 +313,18 @@
     </div>
   </dialog>
 
-  <dialog id="settingsDialog">
-    <div class="modal">
-      <header>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
-          <div style="font-weight:900;">設定</div>
-          <button id="closeSettings">閉じる</button>
-        </div>
-      </header>
-      <div class="body">
-        <div class="settingsGrid">
-          <div class="muted">色（差し色）</div>
-          <div class="settingsRow">
-            <input id="accentPicker" type="color" />
-            <input id="accentHex" type="text" placeholder="#7dd3fc" />
-            <button id="applyAccent" class="primary">適用</button>
-            <button id="resetAccent">リセット</button>
-          </div>
-          <div class="muted">ヒント：#RRGGBB で好きな色にできます（例 #7dd3fc）。</div>
-        </div>
-      </div>
-    </div>
-  </dialog>
-
   <script>
     const $ = id => document.getElementById(id);
 
-    // --- Clock ---
     const clock = $('clock');
     function tick(){ clock.textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'}); }
     setInterval(tick, 1000); tick();
 
-    // --- Helpers ---
     function pad2(n){return String(n).padStart(2,'0');}
     function nowHM(){ const d = new Date(); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }
     function localYMD(d){ const y=d.getFullYear(); const m=pad2(d.getMonth()+1); const day=pad2(d.getDate()); return `${y}-${m}-${day}`; }
     function isToday(ts){ return localYMD(new Date(ts)) === localYMD(new Date()); }
 
-    // --- Theme (accent) ---
-    const DEFAULT_ACCENT = '#7dd3fc';
-    function normalizeHex(s){
-      if(!s) return null;
-      s = String(s).trim();
-      if(!s.startsWith('#')) s = '#' + s;
-      if(/^#[0-9a-fA-F]{6}$/.test(s)) return s.toLowerCase();
-      return null;
-    }
-    function applyAccent(hex){
-      document.documentElement.style.setProperty('--accent', hex);
-      // keep derived borders in sync
-      document.documentElement.style.setProperty('--run-bg', 'rgba(125, 211, 252, 0.14)');
-      localStorage.setItem('edge_accent', hex);
-    }
-    const savedAccent = normalizeHex(localStorage.getItem('edge_accent')) || DEFAULT_ACCENT;
-    applyAccent(savedAccent);
-
-    // Settings dialog
-    const settingsDialog = $('settingsDialog');
-    $('openSettings').onclick = ()=>{
-      const cur = normalizeHex(localStorage.getItem('edge_accent')) || DEFAULT_ACCENT;
-      $('accentPicker').value = cur;
-      $('accentHex').value = cur;
-      settingsDialog.showModal();
-    };
-    $('closeSettings').onclick = ()=> settingsDialog.close();
-
-    $('applyAccent').onclick = ()=>{
-      const hex = normalizeHex($('accentHex').value) || normalizeHex($('accentPicker').value);
-      if(!hex) return alert('カラーコードは #RRGGBB の形式で入力してください（例: #7dd3fc）');
-      $('accentHex').value = hex;
-      $('accentPicker').value = hex;
-      applyAccent(hex);
-      render();
-    };
-
-    $('accentPicker').addEventListener('input', ()=>{ $('accentHex').value = $('accentPicker').value; });
-    $('resetAccent').onclick = ()=>{
-      localStorage.removeItem('edge_accent');
-      $('accentPicker').value = DEFAULT_ACCENT;
-      $('accentHex').value = DEFAULT_ACCENT;
-      applyAccent(DEFAULT_ACCENT);
-      render();
-    };
-
-    // --- Settings: font size ---
     const defaultFont = parseInt(localStorage.getItem('edge_font') || '22', 10);
     function applyFontSize(size){
       document.documentElement.style.setProperty('--title-size', size + 'px');
@@ -432,7 +339,6 @@
     fontRange.addEventListener('input', () => applyFontSize(parseInt(fontRange.value, 10)));
     applyFontSize(defaultFont);
 
-    // --- Mild compact (auto when embed is small) ---
     const app = $('app');
     function evaluateAutoCompact(){
       const w = app.clientWidth;
@@ -448,20 +354,17 @@
       setInterval(evaluateAutoCompact, 1200);
     }
 
-    // --- Filters (persisted) ---
     const todayOnly = $('todayOnly');
     const hideDone = $('hideDone');
     todayOnly.checked = (localStorage.getItem('edge_today_only') === '1');
-    hideDone.checked = (localStorage.getItem('edge_hide_done') !== '0'); // default ON
+    hideDone.checked = (localStorage.getItem('edge_hide_done') !== '0');
     todayOnly.addEventListener('change', ()=>{ localStorage.setItem('edge_today_only', todayOnly.checked ? '1':'0'); render(); });
     hideDone.addEventListener('change', ()=>{ localStorage.setItem('edge_hide_done', hideDone.checked ? '1':'0'); render(); });
 
-    // --- Order toggle (persisted) ---
     const orderSelect = $('orderSelect');
     orderSelect.value = (localStorage.getItem('edge_order') || 'top');
     orderSelect.addEventListener('change', ()=>{ localStorage.setItem('edge_order', orderSelect.value); render(); });
 
-    // --- Focus mode (persisted) ---
     const toggleFocusBtn = $('toggleFocus');
     const focusBack = $('focusBack');
     const focusStop = $('focusStop');
@@ -475,11 +378,9 @@
       app.classList.toggle('focus', on);
       if(on) updateFocusScreen();
     }
-
     toggleFocusBtn.onclick = ()=> setFocus(true);
     focusBack.onclick = ()=> setFocus(false);
 
-    // --- Data ---
     let tasks = JSON.parse(localStorage.getItem('edge_tasks')||'[]');
     let selectedId = localStorage.getItem('edge_selected') || null;
 
@@ -490,6 +391,7 @@
     const quickAdd = $('quickAdd');
     const addBtn = $('addBtn');
     const appendNowBtn = $('appendNow');
+    const appendTildeBtn = $('appendTilde');
     const saveNoteBtn = $('saveNote');
     const summaryCount = $('summaryCount');
     const doneCount = $('doneCount');
@@ -503,17 +405,17 @@
     function getRunningTask(){ return tasks.find(t=>t.running); }
 
     function setSelected(taskId){
-  selectedId = taskId;
-  const t = tasks.find(x=>x.id===selectedId);
-  timeNote.value = t ? (t.note || '') : '';
-  localStorage.setItem('edge_selected', selectedId || '');
-  render();
-}
+      selectedId = taskId;
+      const t = tasks.find(x=>x.id===selectedId);
+      timeNote.value = t ? (t.note || '') : '';
+      localStorage.setItem('edge_selected', selectedId || '');
+      render();
+    }
 
     function deleteTask(taskId){
       const t = tasks.find(x=>x.id===taskId);
       if(!t) return;
-      const ok = confirm('このタスクを削除しますか？\\n\\n' + t.title);
+      const ok = confirm('このタスクを削除しますか？\n\n' + t.title);
       if(!ok) return;
       if(t.running){
         const last = t.logs[t.logs.length-1];
@@ -528,8 +430,7 @@
       let arr = tasks.slice();
       if(todayOnly.checked) arr = arr.filter(t=>isToday(t.created));
       if(hideDone.checked) arr = arr.filter(t=>!t.done);
-
-      const dir = (orderSelect.value === 'top') ? -1 : 1; // top = newest first
+      const dir = (orderSelect.value === 'top') ? -1 : 1;
       arr.sort((a,b)=> (a.created - b.created) * dir);
       return arr;
     }
@@ -594,7 +495,7 @@
       if(r){
         focusMeta.textContent = '集中モード（開始中タスクのみ表示）';
         focusTitle.textContent = r.title;
-        focusNote.textContent = r.note ? r.note : 'メモなし（下の「＋いま」「開始/終了」「/」「次：」で追記できます）';
+        focusNote.textContent = r.note ? r.note : 'メモなし（通常表示に戻ってメモ追加できます）';
         focusStop.disabled = false;
         focusAppendNow.disabled = false;
       } else {
@@ -673,21 +574,16 @@
       }
     }
 
-    // --- Add ---
     addBtn.onclick = ()=>{
       const title = quickAdd.value.trim();
       if(!title) return;
       const t = { id:'id'+Date.now(), title, note:'', done:false, created:Date.now(), running:false, logs:[] };
       tasks.push(t);
       quickAdd.value='';
-      setSelected(t.id);
+      selectedId = t.id;
+      localStorage.setItem('edge_selected', selectedId || '');
+      render();
     };
-
-    // --- Memo helpers ---
-    function appendTextToNote(txt){
-      const cur = timeNote.value || '';
-      timeNote.value = cur ? (cur + txt) : txt;
-    }
 
     function appendNowToNote(){
       const stamp = nowHM();
@@ -695,36 +591,14 @@
       const next = cur ? (cur.trim().endsWith('-') || cur.trim().endsWith('–') ? `${cur}${stamp}` : `${cur} ${stamp}`) : stamp;
       timeNote.value = next;
     }
-    const appendTildeBtn = $('appendTilde');
-    
+
     function appendTildeToNote(){
-  const cur = timeNote.value || '';
-  timeNote.value = cur ? (cur + '～') : '～';
-}
-
-appendTildeBtn.onclick = ()=> appendTildeToNote();
-
-    function appendStart(){
-      const stamp = nowHM();
       const cur = timeNote.value || '';
-      // If empty or ends with separator, add "HH:MM-". Otherwise add " HH:MM-".
-      const prefix = cur && !cur.endsWith(' ') ? ' ' : '';
-      timeNote.value = cur ? (cur + prefix + stamp + '-') : (stamp + '-');
+      timeNote.value = cur ? (cur + '～') : '～';
     }
-
-    function appendEnd(){
-      const stamp = nowHM();
-      const cur = timeNote.value || '';
-      const prefix = cur && !cur.endsWith(' ') ? ' ' : '';
-      timeNote.value = cur ? (cur + prefix + stamp) : stamp;
-    }
-
-    $('chipStart').onclick = ()=> appendStart();
-    $('chipEnd').onclick = ()=> appendEnd();
-    $('chipSlash').onclick = ()=> appendTextToNote(' / ');
-    $('chipNext').onclick = ()=> appendTextToNote(' 次: ');
 
     appendNowBtn.onclick = ()=> appendNowToNote();
+    appendTildeBtn.onclick = ()=> appendTildeToNote();
 
     saveNoteBtn.onclick = ()=>{
       if(!selectedId) return alert('先にタスクを選んでください');
@@ -736,7 +610,6 @@ appendTildeBtn.onclick = ()=> appendTildeToNote();
       save();
     };
 
-    // Focus buttons
     focusStop.onclick = ()=>{
       const r = getRunningTask();
       if(r) toggleRun(r.id);
@@ -747,6 +620,7 @@ appendTildeBtn.onclick = ()=> appendTildeToNote();
       const r = getRunningTask();
       if(!r) return;
       selectedId = r.id;
+      localStorage.setItem('edge_selected', selectedId || '');
       timeNote.value = r.note || '';
       appendNowToNote();
       r.note = timeNote.value;
@@ -756,7 +630,6 @@ appendTildeBtn.onclick = ()=> appendTildeToNote();
       updateFocusScreen();
     };
 
-    // --- Clear ---
     $('clearBtn').onclick = ()=>{
       if(confirm('全てのタスクを削除しますか？')){
         tasks=[];
@@ -766,7 +639,6 @@ appendTildeBtn.onclick = ()=> appendTildeToNote();
       }
     };
 
-    // --- Summary ---
     const dialog = $('summaryDialog');
     const summaryText = $('summaryText');
     const summaryMeta = $('summaryMeta');
@@ -803,7 +675,7 @@ appendTildeBtn.onclick = ()=> appendTildeToNote();
 
       lines.push('■ メモ');
       lines.push('・');
-      return lines.join('\\n');
+      return lines.join('\n');
     }
 
     $('openSummary').onclick = ()=>{
@@ -833,7 +705,6 @@ appendTildeBtn.onclick = ()=> appendTildeToNote();
       URL.revokeObjectURL(url);
     };
 
-    // --- Keyboard shortcuts ---
     document.addEventListener('keydown', e=>{
       if(e.key==='n'){ quickAdd.focus(); e.preventDefault(); }
       if(e.key==='c'){
@@ -854,19 +725,13 @@ appendTildeBtn.onclick = ()=> appendTildeToNote();
       }
       if(e.key==='Escape'){
         if(dialog.open) dialog.close();
-        if(settingsDialog.open) settingsDialog.close();
         if(app.classList.contains('focus')) setFocus(false);
       }
     });
 
-    // init
     evaluateAutoCompact();
     render();
-
-    // Restore focus if it was on
-    if(localStorage.getItem('edge_focus') === '1'){
-      setFocus(true);
-    }
+    if(localStorage.getItem('edge_focus') === '1'){ setFocus(true); }
   </script>
 </body>
 </html>
