@@ -270,17 +270,11 @@
         <input id="timeNote" class="time-input" placeholder="選択中タスクのメモ（例: 13:30-14:10 / 気づき / 次やること）" />
         <div class="rowActions" style="flex:0 0 auto;">
           <button id="appendNow" title="いまの時刻を追記">＋いま</button>
+          <button id="appendTilde" title="～ を追記">～</button>
           <button id="saveNote" class="primary" title="選択中タスクにメモを保存">メモ保存</button>
         </div>
       </div>
 
-      <!-- Quick insert buttons for memo (楽に打つ用) -->
-      <div class="chipbar">
-        <button class="chip" id="chipStart" title="開始時刻を 'HH:MM-' 形式で追記">開始</button>
-        <button class="chip" id="chipEnd" title="終了時刻を追記">終了</button>
-        <button class="chip" id="chipSlash" title="区切り ' / ' を追加">/</button>
-        <button class="chip" id="chipNext" title="次やることのテンプレ">次：</button>
-      </div>
 
       <div class="settings">
         <label>追加順</label>
@@ -700,6 +694,14 @@
       const next = cur ? (cur.trim().endsWith('-') || cur.trim().endsWith('–') ? `${cur}${stamp}` : `${cur} ${stamp}`) : stamp;
       timeNote.value = next;
     }
+    const appendTildeBtn = $('appendTilde');
+    
+    function appendTildeToNote(){
+  const cur = timeNote.value || '';
+  timeNote.value = cur ? (cur + '～') : '～';
+}
+
+appendTildeBtn.onclick = ()=> appendTildeToNote();
 
     function appendStart(){
       const stamp = nowHM();
